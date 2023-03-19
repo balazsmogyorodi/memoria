@@ -1,23 +1,23 @@
 //window.addEventListener("load", init);
 const kartyaHatat = "kepek/kartyahat.png";
-const list = [
-    { kep: "kepek/banjo-and-kazooie.png", id: "1" },
-    { kep: "kepek/banjo-and-kazooie.png",id: "1" },
-    { kep: "kepek/kirby.png", id: "2" },
-    { kep: "kepek/kirby.png", id: "2" },
-    { kep: "kepek/link.png" , id: "3"},
-    { kep: "kepek/link.png" , id: "3"},
-    { kep: "kepek/pac-man.png" , id: "4"},
-    { kep: "kepek/pac-man.png" , id: "4"},
-    { kep: "kepek/zero_suit_samus.png", id: "5" },
-    { kep: "kepek/zero_suit_samus.png" , id: "5"},
-    { kep: "kepek/steve.png" , id: "6"},
-    { kep: "kepek/steve.png" , id: "6"}];
-    list.sort(function(){return 0.5 - Math.random()});
-    list.sort(function(){return 0.5 - Math.random()});
+const kartyaLapok = [
+    "kepek/banjo-and-kazooie.png",
+    "kepek/kirby.png",
+    "kepek/link.png",
+    "kepek/pac-man.png",
+    "kepek/zero_suit_samus.png",
+    "kepek/steve.png"
+]
+const pakli = [];
+for (let index = 0; index < kartyaLapok.length; index++) {
+    pakli.push(index)
+    pakli.push(index)
+}
 
-const kivalasztot = [];
-const memoriaKartyak = [];
+
+pakli.sort(function () { return 0.5 - Math.random() });
+
+let kivalasztot = [];
 
 $(window).ready(function () {
     const lefedettLapok = $("#jatek");
@@ -28,25 +28,56 @@ $(window).ready(function () {
 
 
 
-   
-   
+
+
 });
 
 
 function kartyak() {
     let kiiras = "";
-        for (let index = 0; index < list.length; index++) {
-            kiiras += `<div class='kartya'> <img src="${kartyaHatat}" alt='memoria' class='kep' id="${list[index].id}"> </div>`;
-        }
+    for (let index = 0; index < pakli.length; index++) {
+        kiiras += `<div class='kartya'> <img src="${kartyaHatat}" alt='memoria' class='kep' id="${index}"> </div>`;
+    }
     console.log(kiiras);
     return kiiras;
 }
 
 
 function forditas() {
-    const aktkep = event.target;
-    console.log(aktkep.id)
+    const kep = $(this);
+    console.log(kep);
+    console.log(kep.attr("id"));
+    const hanyadik = kep.attr("id");
+    kivalasztot.push(hanyadik);
+    ellenorzes(hanyadik);
+    kep.attr("src", kartyaLapok[pakli[hanyadik]]);
+}
 
+function ellenorzes(hanyadik){
+    if (kivalasztot.length == 2) {
+        if (pakli[kivalasztot[0]] ==pakli[kivalasztot[1]]) {
+           talalt();
+        }
+        else{ 
+            nemtalalt();
+        }
+
+    }
+
+function talalt(){
+    console.log("Talált");
+
+    kivalasztot = [];
+}
+
+function nemtalalt() {
+    const kep1 = `#${kivalasztot[0]}`;
+    const kep2 = `#${kivalasztot[1]}`;
+    kep1.attr("src", kartyaHatat);
+    kep2.attr("src", kartyaHatat);
+    kivalasztot = [];
+    console.log("Nem talált");
+}
 
 
 }
