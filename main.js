@@ -1,24 +1,23 @@
 //window.addEventListener("load", init);
-
-const list = [
-    { kep: "kepek/banjo-and-kazooie.png", id: "1" },
-    { kep: "kepek/banjo-and-kazooie.png",id: "1" },
-    { kep: "kepek/kirby.png", id: "2" },
-    { kep: "kepek/kirby.png", id: "2" },
-    { kep: "kepek/link.png" , id: "3"},
-    { kep: "kepek/link.png" , id: "3"},
-    { kep: "kepek/pac-man.png" , id: "4"},
-    { kep: "kepek/pac-man.png" , id: "4"},
-    { kep: "kepek/zero_suit_samus.png", id: "5" },
-    { kep: "kepek/zero_suit_samus.png" , id: "5"},
-    { kep: "kepek/steve.png" , id: "6"},
-    { kep: "kepek/steve.png" , id: "6"}];
-const kivalasztot = [];
+const hatLap = "kepek/kartyahat.png";
+const eloLapok = [
+    "kepek/banjo-and-kazooie.png",
+    "kepek/kirby.png",
+    "kepek/link.png",
+    "kepek/pac-man.png",
+    "kepek/zero_suit_samus.png",
+    "kepek/steve.png"
+]
+const pakli = [];
+for (let i = 0; i < eloLapok.length; i++) {
+    pakli.push(i);
+    pakli.push(i);
+}
+let kivalasztot = [];
 const memoriaKartyak = [];
 
 $(window).ready(function () {
     kartyak();
-    jatek.on('click')
 });
 
 
@@ -27,20 +26,66 @@ $(window).ready(function () {
 function kartyak() {
     const Element = $('#jatek');
     let kiiras = "";
-    list.sort(function(){return 0.5 - Math.random()});
-        for (let index = 0; index < list.length; index++) {
-            kiiras += `<div class='kartya'> <img src='kepek/kartyahat.png' alt='memoria' class='kep' id=${list[index].id}> </div>`;
-        }
+    shuffleArray(pakli);
+    for (let index = 0; index < pakli.length; index++) {
+        kiiras += `<div class='kartya'> <img src=${hatLap} alt='memoria' class='kep' id=${index}> </div>`;
+    }
     Element.append(kiiras);
-    console.log(Element);
-
+    const kepek = $(".kep")
+    kepek.on("click", forditas);
 }
 
-function jatek() {
-
-
-
-
+function forditas() {
+    if (kivalasztot.length == 2) {
+        return;
+    }
+    const kep = $(this);
+    const index = kep.attr("id");
+    if (kivalasztot.includes(index) == false) {
+        console.log("forditas");
+        kivalasztot.push(index);
+        kep.attr("src",eloLapok[pakli[index]]);
+        ellenorzes(index);
+    }      
 }
+async function ellenorzes(index) {
+    if (kivalasztot.length == 2) {
+        if (pakli[kivalasztot[0]] == pakli[kivalasztot[1]]) {
+            talalt();
+        } else {
+            await delay(1000)
+            nemTalalt();
+        }
+    }
+}
+function talalt() {
+    const kep1 = $(`#${kivalasztot[0]}`);
+    const kep2 = $(`#${kivalasztot[1]}`);
+    kep1.off("click", forditas);
+    kep2.off("click", forditas);
+    kivalasztot= []
+    console.log("Talalt")
+}
+function nemTalalt() {
+    const kep1 = $(`#${kivalasztot[0]}`);
+    const kep2 = $(`#${kivalasztot[1]}`);
+    kep1.attr("src", hatLap);
+    kep2.attr("src", hatLap);
+    kivalasztot= []
+    console.log("Nem Talalt")
+}
+
+// Delay funcion
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+// The Fisher-Yates algorith
+const shuffleArray = array => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  }
 
 
